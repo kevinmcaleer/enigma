@@ -1,2 +1,2 @@
-pyenigma==0.4.2
+py-enigma
 dispy==4.12.2
