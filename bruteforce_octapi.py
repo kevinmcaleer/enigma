@@ -59,7 +59,7 @@ ring_choice = "1 1 1"
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.connect(("192.168.2.1", 8002)) # doesn't matter if 8.8.8.8 can't be reached
-cluster = dispy.JobCluster(find_rotor_start, host=s.getsockname()[0], nodes='192.168.2.*')
+cluster = dispy.JobCluster(find_rotor_start, ip_addr==s.getsockname()[0], nodes='192.168.2.*')
 
 jobs = []
 id = 1
