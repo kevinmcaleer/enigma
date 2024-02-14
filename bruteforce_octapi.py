@@ -63,7 +63,7 @@ print(f"socket = {s}")
 ip_addr = s.getsockname()[0]
 print(f"IP address: {ip_addr}")
 cluster = dispy.JobCluster(find_rotor_start, ip_addr=ip_addr, nodes='192.168.2.*')
-print(cluster.status())
+print(f" cluster status {cluster.status()}")
 
 jobs = []
 id = 1
