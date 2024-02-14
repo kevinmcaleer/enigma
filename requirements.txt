@@ -1,1 +1,2 @@
 pyenigma==0.4.2
+dispy==4.12.2
