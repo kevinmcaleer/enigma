@@ -57,12 +57,8 @@ ciphertext = "FKFPQZYVON"
 cribtext = "CHELTENHAM"
 ring_choice = "1 1 1"
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("192.168.2.1", 8002)) # doesn't matter if 8.8.8.8 can't be reached
-print(f"socket = {s}")
-ip_addr = s.getsockname()[0]
-print(f"IP address: {ip_addr}")
-cluster = dispy.JobCluster(find_rotor_start, ip_addr=ip_addr, nodes=[('192.168.2.1',8002),('192.168.2.2',8002)], loglevel=dispy.logger.DEBUG)
+
+cluster = dispy.JobCluster(find_rotor_start, nodes=[('192.168.2.1',8002),('192.168.2.2',8002)], loglevel=dispy.logger.DEBUG)
 print(f" cluster status {cluster.status()}")
 
 jobs = []
