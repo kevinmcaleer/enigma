@@ -46,7 +46,7 @@ def find_rotor_start(rotor_choice, cipher_text, crib_text, ring_choice):
                     return rotor_choice, ring_choice, start_pos
          
     # If no valid settings are found, return None
-    return rotor_choice, "Cannot find settings"
+    return rotor_choice, ring_choice, "Cannot find settings"
 
 # Enter ciphertext, cribtext and ring choice
 # ciphertext = input("Enter the ciphertext: ")
@@ -56,9 +56,8 @@ def find_rotor_start(rotor_choice, cipher_text, crib_text, ring_choice):
 ciphertext = "FKFPQZYVON"
 cribtext = "CHELTENHAM"
 ring_choice = "1 1 1"
-
-
-cluster = dispy.JobCluster(find_rotor_start, ip_addr="192.168.2.2", nodes=['192.168.2.1','192.168.2.2'], loglevel=dispy.logger.DEBUG)
+nodes = ['192.168.2.2', '192.168.2.1', '192.168.2.4', '192.168.2.3']
+cluster = dispy.JobCluster(find_rotor_start, nodes=nodes, loglevel=dispy.logger.DEBUG)
 print(f" cluster status {cluster.status()}")
 
 jobs = []
@@ -78,12 +77,13 @@ print( "Collecting job results" )
 found = False
 for job in jobs:
     # Wait for job to finish and return results
-    rotor_setting, ring_setting, start_pos = job()
+    if job.status == dispy.DispyJob.Finished:
+        rotor_setting, ring_setting, start_pos = job()
 
-    # If a start position was found
-    if start_pos != "Cannot find settings":
-        found = True
-        print( "Rotors %s, ring %s, message key was %s, using crib %s" % (rotor_setting, ring_setting, start_pos, cribtext) )
+        # If a start position was found
+        if start_pos != "Cannot find settings":
+            found = True
+            print( "Rotors %s, ring %s, message key was %s, using crib %s" % (rotor_setting, ring_setting, start_pos, cribtext) )
 
 if found == False:
     print( 'Attack unsuccessful' )
