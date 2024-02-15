@@ -58,7 +58,7 @@ cribtext = "CHELTENHAM"
 ring_choice = "1 1 1"
 
 
-cluster = dispy.JobCluster(find_rotor_start, nodes=['192.168.2.1','192.168.2.2'], loglevel=dispy.logger.DEBUG)
+cluster = dispy.JobCluster(find_rotor_start, ip_addr="192.168.2.1", nodes=['192.168.2.1','192.168.2.2'], loglevel=dispy.logger.DEBUG)
 print(f" cluster status {cluster.status()}")
 
 jobs = []
