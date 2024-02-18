@@ -15,3 +15,5 @@ plaintext = 'CHELTENHAM'
 ciphertext = machine.process_text(plaintext)
 print(ciphertext)
 
+# Result should be
+# FKFPQZYVON
