@@ -18,6 +18,7 @@ rotors = [ "I II III", "I II IV", "I II V", "I III II",
 
 cribtext = "ROBOT"
 text = "SUPSH GPYCV JTPYF TDQWV HIBEW FPDBN TAUEL IQXMS ZBDCT"
+text = text.replace(" ","")
 
 ciphertext = text
 ring_choice = "1 1 1"
@@ -34,8 +35,9 @@ def decrypt_message(rotor_choice, start_pos, ciphertext):
 
     machine.set_display(start_pos)
 
-    plaintext = machine.process_text(ciphertext)
-    print(plaintext.replace("X"," "))
+    plaintext = machine.process_text(ciphertext).replace("X"," ")
+    # print(plaintext)
+    return (plaintext)
 
 def find_rotor_start(rotor_choice:str,  ring_choice:str, cipher_text:str, crib_text:str):
     from enigma.machine import EnigmaMachine
@@ -110,7 +112,9 @@ for job in jobs:
         # If a start position was found
         if start_pos != "Cannot find settings":
             found = True
-            print(f"Rotors {rotor_setting}, ring {ring_setting}, message key was {start_pos}, using crib {cribtext}, message: {decrypt_message(rotor_setting, start_pos, ciphertext)}")
+         
+            message = decrypt_message(rotor_setting, start_pos, ciphertext)
+            print(f"Rotors {rotor_setting}, ring {ring_setting}, message key was {start_pos}, using crib {cribtext}, message: {message}")
 
 if found == False:
     print( 'Attack unsuccessful' )
