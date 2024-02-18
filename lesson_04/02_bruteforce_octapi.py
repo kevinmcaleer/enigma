@@ -47,7 +47,6 @@ def find_rotor_start(rotor_choice:str,  ring_choice:str, cipher_text:str, crib_t
     reflector='B', 
     ring_settings=ring_choice,
     plugboard_settings='AV BS CG DL FU HZ IN KM OW RX',
-    # plugboard_settings='AM FI NV PS TU WZ',
     )
 
     for rotor1 in alphabet:
@@ -71,17 +70,6 @@ def find_rotor_start(rotor_choice:str,  ring_choice:str, cipher_text:str, crib_t
          
     # If no valid settings are found, return None
     return rotor_choice, ring_choice, "Cannot find settings"
-
-# Enter ciphertext, cribtext and ring choice
-# ciphertext = input("Enter the ciphertext: ")
-# cribtext = input("Enter the cribtext: ")
-# ring_choice = input("Enter the ring choice: ")
-
-# ciphertext = "FKFPQZYVON"
-
-# text = "EDPUD NRGYS ZRCXN UYTPO MRMBO FKTBZ REZKM LXLVE FGUEY SIOZV EQMIK UBPMM YLKLT TDEIS MDICA GYKUA CTCDO MOHWX MUUIA UBSTS LRNBZ SZWNR FXWFY SSXJZ VIJHI DISHP RKLKA YUPAD TXQSP INQMA TLPIF SVKDA SCTAC DPBOP VHJKX"
-# text = text.replace(" ", "")
-
 
 # nodes = ['192.168.2.2', '192.168.2.1', '192.168.2.4', '192.168.2.3']
 nodes = ['192.168.2.*','192.168.1.*']
@@ -115,19 +103,10 @@ for job in jobs:
         if job.exception:
             print(f"Job {job.id} failed with exception {job.exception}")
 
-    # Created = 5
-    # Running = 6
-    # ProvisionalResult = 7
-    # Cancelled = 8
-    # Terminated = 9
-    # Abandoned = 10
-    # Finished = 11
-    # rotor_setting, ring_setting, start_pos = job()
     if job.status == dispy.DispyJob.Finished:
 
-        # print(f"results from job.results are {job.result}")
         rotor_setting, ring_setting, start_pos = job()
-        # print('job status', job.status, rotor_setting, ring_setting, start_pos)
+
         # If a start position was found
         if start_pos != "Cannot find settings":
             found = True

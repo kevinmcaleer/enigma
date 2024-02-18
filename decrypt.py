@@ -7,10 +7,13 @@ machine = EnigmaMachine.from_key_sheet(
    plugboard_settings='AV BS CG DL FU HZ IN KM OW RX',
    )
 
+MESSAGE = "SUPSH GPYCV JTPYF TDQWV HIBEW FPDBN TAUEL IQXMS ZBDCT"
+
 # Set the initial position of the Enigma rotors
 machine.set_display('QJF')
 
 ciphertext = 'FKFPQZYVON'
+crib = "ROBOT"
 
 plaintext = machine.process_text(ciphertext)
 print(plaintext)
