@@ -1,4 +1,4 @@
-import dispy, socket
+import dispy
 
 rotors = [ "I II III", "I II IV", "I II V", "I III II",
 "I III IV", "I III V", "I IV II", "I IV III",
@@ -16,7 +16,7 @@ rotors = [ "I II III", "I II IV", "I II V", "I III II",
 "V II III", "V II IV", "V III I", "V III II",
 "V III IV", "V IV I", "V IV II", "V IV III" ]
 
-def find_rotor_start(rotor_choice, cipher_text, crib_text, ring_choice):
+def find_rotor_start(rotor_choice:str,  ring_choice:str, cipher_text:str, crib_text:str):
     from enigma.machine import EnigmaMachine
 
     alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -25,6 +25,8 @@ def find_rotor_start(rotor_choice, cipher_text, crib_text, ring_choice):
     rotors=rotor_choice,
     reflector='B', 
     ring_settings=ring_choice,
+    plugboard_settings='AV BS CG DL FU HZ IN KM OW RX',
+    # plugboard_settings='AM FI NV PS TU WZ',
     )
 
     for rotor1 in alphabet:
@@ -40,7 +42,8 @@ def find_rotor_start(rotor_choice, cipher_text, crib_text, ring_choice):
                 # Attempt to decrypt the plaintext
                 plaintext = machine.process_text(cipher_text)
                 print(plaintext)
-                if plaintext == crib_text:
+                # if plaintext == crib_text:
+                if crib_text in plaintext:
                     print("Valid settings found!")
                     print(rotor_choice, start_pos)
                     return rotor_choice, ring_choice, start_pos
@@ -53,10 +56,15 @@ def find_rotor_start(rotor_choice, cipher_text, crib_text, ring_choice):
 # cribtext = input("Enter the cribtext: ")
 # ring_choice = input("Enter the ring choice: ")
 
-ciphertext = "FKFPQZYVON"
-cribtext = "CHELTENHAM"
-ring_choice = "1 1 1"
-nodes = ['192.168.2.2', '192.168.2.1', '192.168.2.4', '192.168.2.3']
+# ciphertext = "FKFPQZYVON"
+
+text = "EDPUD NRGYS ZRCXN UYTPO MRMBO FKTBZ REZKM LXLVE FGUEY SIOZV EQMIK UBPMM YLKLT TDEIS MDICA GYKUA CTCDO MOHWX MUUIA UBSTS LRNBZ SZWNR FXWFY SSXJZ VIJHI DISHP RKLKA YUPAD TXQSP INQMA TLPIF SVKDA SCTAC DPBOP VHJKX"
+text = text.replace(" ", "")
+ciphertext = text
+cribtext = "SEBEZ"
+ring_choice = "02 21 12"
+# nodes = ['192.168.2.2', '192.168.2.1', '192.168.2.4', '192.168.2.3']
+nodes = ['192.168.2.*','192.168.1.*']
 cluster = dispy.JobCluster(find_rotor_start, nodes=nodes, loglevel=dispy.logger.DEBUG)
 print(f" cluster status {cluster.status()}")
 
@@ -64,7 +72,7 @@ jobs = []
 id = 1
 # Submit the jobs for this ring choice
 for rotor_choice in rotors:
-    job = cluster.submit( rotor_choice, ciphertext, cribtext, ring_choice )
+    job = cluster.submit(rotor_choice, ring_choice, ciphertext, cribtext)
     job.id = id # Associate an ID to the job
     jobs.append(job)
     id += 1   # Next job
@@ -75,11 +83,31 @@ print( "Collecting job results" )
 
 # Collect and check through the jobs for this ring setting
 found = False
+
 for job in jobs:
     # Wait for job to finish and return results
+
     if job.status == dispy.DispyJob.Finished:
         rotor_setting, ring_setting, start_pos = job()
 
+    else:
+        print(f"Job {job.id} did not finish, status is {job.status}")
+        if job.exception:
+            print(f"Job {job.id} failed with exception {job.exception}")
+
+    # Created = 5
+    # Running = 6
+    # ProvisionalResult = 7
+    # Cancelled = 8
+    # Terminated = 9
+    # Abandoned = 10
+    # Finished = 11
+    # rotor_setting, ring_setting, start_pos = job()
+    if job.status == dispy.DispyJob.Finished:
+
+        # print(f"results from job.results are {job.result}")
+        rotor_setting, ring_setting, start_pos = job()
+        # print('job status', job.status, rotor_setting, ring_setting, start_pos)
         # If a start position was found
         if start_pos != "Cannot find settings":
             found = True

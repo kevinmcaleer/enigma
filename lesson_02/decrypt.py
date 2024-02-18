@@ -14,4 +14,3 @@ ciphertext = 'FKFPQZYVON'
 
 plaintext = machine.process_text(ciphertext)
 print(plaintext)
-print(plaintext.replace("X", " "))
