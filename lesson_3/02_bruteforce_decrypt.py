@@ -1,3 +1,5 @@
+import time
+
 # ciphertext = "YJPYITREDSYUPIU"
 cribtext = "ROBOT"
 message = "SUPSH GPYCV JTPYF TDQWV HIBEW FPDBN TAUEL IQXMS ZBDCT"
@@ -70,8 +72,16 @@ def find_rotor_start(rotor_choice, cipher_text, crib_text):
 
 message = message.replace(" ","")
 
+start_time = time.time()
+
 for rotor_setting in rotors:
     rotor_choice, start_pos = find_rotor_start(rotor_setting, message, cribtext)
     print(rotor_choice, start_pos)
     if start_pos != "Cannot find settings":
         break
+
+end_time = time.time()
+
+duration = end_time - start_time
+
+print(f"Brute force attack completed in {round(duration,1)} seconds on Mac M1")
